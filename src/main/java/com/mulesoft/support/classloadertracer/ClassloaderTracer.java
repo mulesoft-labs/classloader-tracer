@@ -38,8 +38,6 @@ public class ClassloaderTracer {
                                     byte[] classfileBuffer)
                     throws IllegalClassFormatException {
 
-                // TODO can I print classloader hierarchy here?? loader.getParent() loop and repeat
-
                 out.print("[" + Thread.currentThread().getName() + "] Class: " + className + " loaded by " + printClassloadersHierarchy(loader) + " at " +
                         new java.util.Date());
                 CodeSource cs = protectionDomain.getCodeSource();
