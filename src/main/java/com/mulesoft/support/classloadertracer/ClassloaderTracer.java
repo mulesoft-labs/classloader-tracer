@@ -4,6 +4,18 @@ import java.lang.instrument.*;
 import java.net.URL;
 import java.security.*;
 
+
+/** trace class loading and prints the chain of classloaders that loads each class.
+ * Works as a replacement of the Java -verbose:gc which doesn't show the name of the classloaders.
+ *
+ * Based on this blog post: https://blogs.oracle.com/sundararajan/entry/tracing_class_loading_1_5
+ *
+ * Usage:
+ *
+ * add this argument to your application Java command line: -javaagent:classloader-tracer.jar
+ */
+
+
 public class ClassloaderTracer {
 
 
