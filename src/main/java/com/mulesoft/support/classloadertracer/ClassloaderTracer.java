@@ -1,9 +1,10 @@
 package com.mulesoft.support.classloadertracer;
 
+import java.io.FileOutputStream;
 import java.lang.instrument.*;
 import java.net.URL;
 import java.security.*;
-
+import java.io.PrintWriter;
 
 /** trace class loading and prints the chain of classloaders that loads each class.
  * Works as a replacement of the Java -verbose:gc which doesn't show the name of the classloaders.
@@ -18,7 +19,6 @@ import java.security.*;
 
 public class ClassloaderTracer {
 
-
     public static String printClassloadersHierarchy(ClassLoader cl) {
         StringBuffer buf=new StringBuffer();
 
@@ -31,8 +31,32 @@ public class ClassloaderTracer {
         return buf.toString();
     }
 
-    public static void premain(String agentArgs, Instrumentation inst) {
-        final java.io.PrintStream out = System.out;
+    public static void premain(String agentArguments, Instrumentation inst) throws Exception {
+        PrintWriter outWriter=null;
+
+        if(agentArguments!=null) {
+            for (String t : agentArguments.split(",")) {
+                if (t.equals("help")) {
+                    printUsage();
+                    System.exit(-1); // abort program execution!
+                } else if (t.startsWith("output=")) {
+                    outWriter = new PrintWriter(new FileOutputStream(t.substring(7)));
+                } else if (t.startsWith("stdout")) {
+                    outWriter = new PrintWriter(System.out);
+                } else {
+                    System.err.println("Unknown option: "+t);
+                    printUsage();
+                    System.exit(-1);
+                }
+            }
+        }
+
+        if (outWriter==null) {
+            outWriter = new PrintWriter(System.err);
+        }
+
+        final PrintWriter out=outWriter;
+
         inst.addTransformer(new ClassFileTransformer() {
             public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
                                     byte[] classfileBuffer)
@@ -53,5 +77,12 @@ public class ClassloaderTracer {
                 return null;
             }
         });
+    }
+
+
+    private static void printUsage() {
+        System.err.println("  help          - show the help screen");
+        System.err.println("  stdout        - prints output to stdout (default is stderr)");
+        System.err.println("  output=FILE   - prints output to a file");
     }
 }
