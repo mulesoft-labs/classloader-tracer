@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 public class ClassloaderTracer {
 
     public static String printClassloadersHierarchy(ClassLoader cl) {
-        StringBuffer buf=new StringBuffer();
+        StringBuilder buf= new StringBuilder();
 
         while (cl != null) {
             buf.append(cl.toString());
