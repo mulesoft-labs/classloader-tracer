@@ -62,8 +62,7 @@ public class ClassloaderTracer {
                                     byte[] classfileBuffer)
                     throws IllegalClassFormatException {
 
-                out.print("[" + Thread.currentThread().getName() + "] Class: " + className + " loaded by " + printClassloadersHierarchy(loader) + " at " +
-                        new java.util.Date());
+                out.print(new java.util.Date() + " [" + Thread.currentThread().getName() + "] Class: " + className + " loaded by " + printClassloadersHierarchy(loader) );
                 CodeSource cs = protectionDomain.getCodeSource();
                 URL url = cs.getLocation();
                 out.println(" in " + url.getFile());
