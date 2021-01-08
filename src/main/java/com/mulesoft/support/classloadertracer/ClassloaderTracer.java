@@ -27,7 +27,7 @@ public class ClassloaderTracer {
             buf.append("->");
             cl = cl.getParent();
         }
-        buf.append("(null)");
+        buf.append("(Bootstrap Classloader)");
         return buf.toString();
     }
 
@@ -65,7 +65,7 @@ public class ClassloaderTracer {
                 out.print(new java.util.Date() + " [" + Thread.currentThread().getName() + "] Class: " + className + " loaded by " + printClassloadersHierarchy(loader) );
                 CodeSource cs = protectionDomain.getCodeSource();
                 URL url = cs.getLocation();
-                out.println(" in " + url.getFile());
+                out.println(" in " + url.getFile()); 
 
                 // dump stack trace of the thread loading class
                 // out.println(" stacktrace ");
